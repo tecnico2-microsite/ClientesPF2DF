@@ -6,8 +6,11 @@ import json
 def parsear_xls(name:str="Usuarios.xls"):
     sheet =  x.open_workbook(name).sheet_by_index(0)
     all_users=[]
-
+    
     for i in range(3,sheet.nrows):
+        if sheet.row(i)[3].value=="Empresa" or len(sheet.row(i)[7].value)>8:
+            continue
+        
         
         user = {str(i-2):{
             "empresa":sheet.row(i)[0].value,
@@ -33,16 +36,37 @@ def generar_json(user_list:object):
         json.dump(user_list,f,indent=2,ensure_ascii=False)
         f.close()
 
-def existe_diferencia(archivo,parseado):
-    for i in range(len(parseado)+1):
-        print(i)
-        
+def diferencias_a_cargar(archivo:list,parseado:list):
+    """archivo: JSON parseado: XLS"""
+    diferencias=[]
+    
+    cantidad_diferencias = len(parseado)-len(archivo)
+    
+    if cantidad_diferencias>0:
+        for i in range(cantidad_diferencias):
+            diferencias.append(parseado[i+len(archivo)])
+            
+    
+    for i in range(min(len(parseado),len(archivo))):
+        if parseado[i]!=archivo[i]:
+            diferencias.append(parseado[i])
+    
+    return diferencias
+
+def procesar():
+    parseado = parsear_xls()
+    file = open("users.json","r",encoding="utf-8")
+    archivo = json.loads(file.read())
+    file.close()
+    
+    return diferencias_a_cargar(archivo,parseado)
+    
 if __name__=="__main__":
-    #generar_json(parsear_xls("Usuarios.xls"))
+    generar_json(parsear_xls("Usuarios.xls"))
     #print(parsear_xls())
     parseado = parsear_xls()
     file = open("users.json","r",encoding="utf-8")
     archivo = json.loads(file.read())
     file.close()
     
-    existe_diferencia(file,parseado)
+    print(diferencias_a_cargar(archivo,parseado))

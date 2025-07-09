@@ -1,3 +1,4 @@
 *.json
 *.xls
 local.env
+__pycache__

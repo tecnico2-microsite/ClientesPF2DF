@@ -1,15 +1,16 @@
-import requests, re, os
+import requests, re
+from os import getenv
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
 load_dotenv("../local.env")
 
-BASE_URL = str(os.getenv("BACKOFFICE_URL"))
+BASE_URL = str(getenv("BACKOFFICE_URL"))
 LOGIN_URL = BASE_URL + "/"
 REPORT_URL = BASE_URL + "/workspace/backoffice/useradministration/userreport"
 
-USERNAME = str(os.getenv("USERNAME"))
-PASSWORD = str(os.getenv("PASSWORD"))
+USERNAME = str(getenv("USERNAME"))
+PASSWORD = str(getenv("PASSWORD"))
 
 session = requests.Session()
 

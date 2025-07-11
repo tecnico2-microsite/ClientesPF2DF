@@ -62,7 +62,7 @@ def procesar():
     return diferencias_a_cargar(archivo,parseado)
     
 if __name__=="__main__":
-    generar_json(parsear_xls("Usuarios.xls"))
+    #generar_json(parsear_xls("Usuarios.xls"))
     #print(parsear_xls())
     parseado = parsear_xls()
     file = open("users.json","r",encoding="utf-8")

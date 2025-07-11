@@ -1,9 +1,9 @@
 import requests, re
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import load_dotenv # type: ignore
 from bs4 import BeautifulSoup
 
-load_dotenv("../local.env")
+load_dotenv("local.env")
 
 BASE_URL = str(getenv("BACKOFFICE_URL"))
 LOGIN_URL = BASE_URL + "/"

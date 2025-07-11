@@ -3,11 +3,11 @@ from datetime import date
 from dotenv import load_dotenv
 from os import getenv
 
-load_dotenv("../local.env")
+load_dotenv("local.env")
 def generar_body_headers(datos:list,index:int):
     dato = datos[index][list(datos[index])[0]]
     body= {
-  "Codigo": f"PF{dato['dni']}",
+  "Codigo": dato['dni'],
   "CUIT": dato["cuil"],
   "TipoDocumento": "05",
   "NroDocumento": dato["dni"],
@@ -15,16 +15,18 @@ def generar_body_headers(datos:list,index:int):
   "EMail": dato["email"],
   "Observacion": f'Cliente PE. Estado: {dato["estado"]}. Creado: {dato["fecha_alta"]}. Actualizado al día {str(date.today())}',
   "Telefono": dato["telefono"],
+  "CategCli":"PF"
     }
     
     headers={
-    "IdCliente":getenv("ID_CLIENTE_API_DF"),
-    "Authorization":getenv("TOKEN_API_DF"),
-    "BaseDeDatos":getenv("DATABASE"),
-    "id":f"PF{dato['dni']}",
-  }
-    
-    return body, headers
+    "IdCliente":str(getenv("ID_CLIENTE_API_DF")),
+    "Authorization":str(getenv("TOKEN_API_DF")),
+    "BaseDeDatos":str(getenv("DATABASE")),
+    "id":str(dato['dni']),
+    }
+    url = str(getenv("URL_API_DF"))+"/Cliente/"+dato['dni']
+    body = str(body).replace("'",'"')
+    return url, body, headers
 
 
 
@@ -33,5 +35,5 @@ def generar_body_headers(datos:list,index:int):
 if __name__=="__main__":
   datos = pr.procesar()
   for i in range(len(datos)):
-    body,headers = generar_body_headers(datos,i)
+    url, body,headers = generar_body_headers(datos,i)
     print(body)

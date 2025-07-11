@@ -2,3 +2,6 @@
 *.xls
 local.env
 __pycache__
+build
+dist
+*.spec

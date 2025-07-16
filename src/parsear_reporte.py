@@ -1,6 +1,6 @@
 import xlrd as x
 import json
-
+import obtener_reporte
 
 
 def parsear_xls(name:str="Usuarios.xls"):
@@ -32,9 +32,16 @@ def parsear_xls(name:str="Usuarios.xls"):
 
 
 def generar_json(user_list:object):
-    with open("users.json","w",encoding="utf-8") as f:
-        json.dump(user_list,f,indent=2,ensure_ascii=False)
-        f.close()
+    try:
+        with open("users.json","x",encoding="utf-8") as newJson:
+            newJson.write("[]")
+            newJson.close()
+        generar_json(user_list)
+    except FileExistsError:
+
+        with open("users.json","w",encoding="utf-8") as f:
+            json.dump(user_list,f,indent=2,ensure_ascii=False)
+            f.close()
 
 def diferencias_a_cargar(archivo:list,parseado:list):
     """archivo: JSON parseado: XLS"""
@@ -54,10 +61,18 @@ def diferencias_a_cargar(archivo:list,parseado:list):
     return diferencias
 
 def procesar():
-    parseado = parsear_xls()
-    file = open("users.json","r",encoding="utf-8")
-    archivo = json.loads(file.read())
-    file.close()
+    global archivo, parseado
+    try:
+        with open("users.json","x",encoding="utf-8") as newJson:
+            newJson.write("[]")
+            newJson.close()
+        procesar()
+    except:
+        obtener_reporte.main()
+        parseado = parsear_xls()
+        file = open("users.json","r",encoding="utf-8")
+        archivo = json.loads(file.read())
+        file.close()
     
     return diferencias_a_cargar(archivo,parseado)
     
